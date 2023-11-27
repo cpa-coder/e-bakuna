@@ -1,0 +1,6 @@
+@EBakuna.Server.csproj_HostAddress = http://localhost:5266
+
+GET {{EBakuna.Server.csproj_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
