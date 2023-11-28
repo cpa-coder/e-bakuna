@@ -1,69 +1,69 @@
 <script lang="ts">
-	import './styles.css';
-	import { Icon } from '@smui/common';
-	import { mdiMenu, mdiWhiteBalanceSunny, mdiWeatherNight } from '@mdi/js';
-	import IconButton from '@smui/icon-button';
-	import TopAppBar, { Row, Section, Title, AutoAdjust } from '@smui/top-app-bar';
+	import '../app.postcss';
+	import {
+		AppShell,
+		AppBar,
+		Avatar,
+		Drawer,
+		LightSwitch,
+		storePopup,
+		getDrawerStore
+	} from '@skeletonlabs/skeleton';
+	import type { DrawerSettings } from '@skeletonlabs/skeleton';
 
-	let topAppBar: TopAppBar;
-	let darkTheme: boolean | undefined = undefined;
+	import Navigation from '$lib/components/Navigation.svelte';
+	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 
-	if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-		const storedTheme = localStorage.getItem('theme');
+	import { initializeStores } from '@skeletonlabs/skeleton';
 
-		if (storedTheme === null) {
-			darkTheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
-		} else {
-			darkTheme = storedTheme === 'dark';
-		}
-	}
+	initializeStores();
+	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
-	function toggleTheme() {
-		if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-			localStorage.setItem('theme', darkTheme ? 'light' : 'dark');
-			darkTheme = !darkTheme;
-		}
+	const drawerSettings: DrawerSettings = {
+		width: 'w-[280px] md:w-[480px]',
+		rounded: 'rounded-l'
+	};
+
+	const drawer = getDrawerStore();
+
+	function drawerOpen(): void {
+		drawer.open(drawerSettings);
 	}
 </script>
 
-<svelte:head>
-	{#if darkTheme === undefined}
-		<link rel="stylesheet" href="/smui.css" media="(prefers-color-scheme: light)" />
-		<link rel="stylesheet" href="/smui-dark.css" media="screen and (prefers-color-scheme: dark)" />
-	{:else if darkTheme}
-		<link rel="stylesheet" href="/smui.css" />
-		<link rel="stylesheet" href="/smui-dark.css" media="screen" />
-	{:else}
-		<link rel="stylesheet" href="/smui.css" />
-	{/if}
-</svelte:head>
-<div class="app-transition">
-	<TopAppBar bind:this={topAppBar} variant="standard">
-		<Row>
-			<Section>
-				<IconButton>
-					<Icon tag="svg" viewBox="0 0 24 24">
-						<path fill="currentColor" d={mdiMenu} />
-					</Icon>
-				</IconButton>
-				<Title>E-Bakuna</Title>
-			</Section>
-			<Section align="end" toolbar>
-				<IconButton on:click={toggleTheme}>
-					<Icon tag="svg" viewBox="0 0 24 24">
-						<path fill="currentColor" d={darkTheme ? mdiWhiteBalanceSunny : mdiWeatherNight} />
-					</Icon>
-				</IconButton>
-			</Section>
-		</Row>
-	</TopAppBar>
-	<AutoAdjust {topAppBar}>
-		<slot />
-	</AutoAdjust>
-</div>
+<Drawer>
+	<Navigation />
+</Drawer>
 
-<style>
-	.app-transition {
-		transition: all 0.2s ease-in-out;
-	}
-</style>
+<AppShell slotSidebarLeft="w-0 md:w-52 bg-surface-500/10">
+	<svelte:fragment slot="header">
+		<AppBar>
+			<svelte:fragment slot="lead">
+				<button class="md:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+					<span>
+						<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+							<rect width="100" height="20" />
+							<rect y="30" width="100" height="20" />
+							<rect y="60" width="100" height="20" />
+						</svg>
+					</span>
+				</button>
+				<strong class="text-xl">e-Bakuna</strong>
+			</svelte:fragment>
+			<svelte:fragment slot="trail">
+				<Avatar
+					src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=3023&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+					initials="OG"
+					width="w-8"
+				/>
+				<LightSwitch />
+			</svelte:fragment>
+		</AppBar>
+	</svelte:fragment>
+	<svelte:fragment slot="sidebarLeft">
+		<div id="sidebar-left" class="hidden lg:block">
+			<Navigation />
+		</div>
+	</svelte:fragment>
+	<slot />
+</AppShell>
