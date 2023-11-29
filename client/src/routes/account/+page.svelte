@@ -2,10 +2,10 @@
 	import Fader from '$lib/components/Fader.svelte';
 </script>
 
-<div class="container h-full mx-auto flex justify-center items-center">
+<div class="container mx-auto flex justify-center items-center">
 	<Fader>
-		<div class="space-y-10 text-center flex flex-col items-center">
-			<h2 class="h2">Account</h2>
+		<div class="space-y-10 text-center flex flex-col justify-center items-center">
+			<h2 class="h4">Account1</h2>
 		</div>
 	</Fader>
 </div>
