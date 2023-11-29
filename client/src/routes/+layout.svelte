@@ -27,18 +27,21 @@
 	};
 
 	const drawer = getDrawerStore();
-	let isDrawerOpen = false;
-
-	drawer.subscribe((value) => {
-		isDrawerOpen = value.open ?? false;
-	});
 
 	function drawerOpen(): void {
 		drawer.open(drawerSettings);
 	}
 
 	let sideBarOpen = true;
+
+	let innerWidth = 0;
+
+	$: if (innerWidth < 768) {
+		sideBarOpen = false;
+	}
 </script>
+
+<svelte:window bind:innerWidth />
 
 <Drawer>
 	<div class="px-4 pt-4 flex items-center">
@@ -52,7 +55,7 @@
 	{#if sideBarOpen}
 		<aside
 			transition:slide={{ duration: 200, axis: 'x', easing: quadInOut }}
-			class="sidebar w-[250px] hidden md:block bg-surface-500/10"
+			class="sidebar w-[250px] bg-surface-500/10"
 		>
 			<div
 				transition:fly={{ x: -150 }}
@@ -93,7 +96,7 @@
 							</svg>
 						</span>
 					</button>
-					{#if !sideBarOpen && !isDrawerOpen}
+					{#if !sideBarOpen}
 						<div
 							in:fly={{ x: -150, duration: 300 }}
 							out:fade={{ duration: 300 }}
