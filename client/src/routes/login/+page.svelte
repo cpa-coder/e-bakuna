@@ -8,17 +8,19 @@
 	let password = '';
 	let errorMessage = '';
 
+	$: {
+		if (username !== '' || password !== '') {
+			errorMessage = '';
+		}
+	}
+
+	$: disableSubmit = username === '' || password === '';
+
 	function handleSubmit() {
 		if (username === '' || password === '') {
 			errorMessage = 'Please enter both username and password';
 		} else {
 			alert('Welcome '.concat(password) + '!');
-		}
-	}
-
-	$: {
-		if (username !== '' || password !== '') {
-			errorMessage = '';
 		}
 	}
 </script>
@@ -39,7 +41,12 @@
 			<span class="label-text">Password</span>
 			<Password id="password" bind:value={password} />
 		</label>
-		<button type="submit" on:click={handleSubmit} class="btn variant-filled-primary mt-4">
+		<button
+			disabled={disableSubmit}
+			type="submit"
+			on:click={handleSubmit}
+			class="btn variant-filled-primary mt-4"
+		>
 			Login
 		</button>
 		<span class="text-red-500 my-2">{errorMessage}</span>

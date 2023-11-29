@@ -35,7 +35,7 @@
 
 	let sideBarOpen = true;
 
-	let innerWidth = 0;
+	let innerWidth = 768;
 
 	$: if (innerWidth < 768) {
 		sideBarOpen = false;
