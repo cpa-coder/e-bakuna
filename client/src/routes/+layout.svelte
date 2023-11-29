@@ -17,6 +17,7 @@
 
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	import { quadInOut } from 'svelte/easing';
+	import { page } from '$app/stores';
 
 	initializeStores();
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
@@ -39,6 +40,8 @@
 	$: if (innerWidth < 768) {
 		sideBarOpen = false;
 	}
+
+	$: isLogin = $page.url.pathname === '/login';
 </script>
 
 <svelte:window bind:innerWidth />
@@ -52,7 +55,7 @@
 </Drawer>
 
 <div class="flex h-full">
-	{#if sideBarOpen}
+	{#if sideBarOpen && !isLogin}
 		<aside
 			transition:slide={{ duration: 200, axis: 'x', easing: quadInOut }}
 			class="sidebar w-[250px] bg-surface-500/10"
@@ -75,28 +78,30 @@
 		<div class="flex-none">
 			<AppBar>
 				<svelte:fragment slot="lead">
-					<button class="md:hidden btn btn-sm mr-4" on:click={drawerOpen}>
-						<span>
-							<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
-								<rect width="100" height="10" />
-								<rect y="30" width="100" height="10" />
-								<rect y="60" width="100" height="10" />
-							</svg>
-						</span>
-					</button>
-					<button
-						class="hidden md:block btn btn-sm mr-4"
-						on:click={() => (sideBarOpen = !sideBarOpen)}
-					>
-						<span>
-							<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
-								<rect width="100" height="10" />
-								<rect y="30" width="100" height="10" />
-								<rect y="60" width="100" height="10" />
-							</svg>
-						</span>
-					</button>
-					{#if !sideBarOpen}
+					{#if !isLogin}
+						<button class="md:hidden btn btn-sm mr-4" on:click={drawerOpen}>
+							<span>
+								<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+									<rect width="100" height="10" />
+									<rect y="30" width="100" height="10" />
+									<rect y="60" width="100" height="10" />
+								</svg>
+							</span>
+						</button>
+						<button
+							class="hidden md:block btn btn-sm mr-4"
+							on:click={() => (sideBarOpen = !sideBarOpen)}
+						>
+							<span>
+								<svg viewBox="0 0 100 80" class="fill-token w-4 h-4">
+									<rect width="100" height="10" />
+									<rect y="30" width="100" height="10" />
+									<rect y="60" width="100" height="10" />
+								</svg>
+							</span>
+						</button>
+					{/if}
+					{#if !sideBarOpen || isLogin}
 						<div
 							in:fly={{ x: -150, duration: 300 }}
 							out:fade={{ duration: 300 }}
@@ -108,11 +113,13 @@
 					{/if}
 				</svelte:fragment>
 				<svelte:fragment slot="trail">
-					<Avatar
-						src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=3023&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-						initials="OG"
-						width="w-8"
-					/>
+					{#if !isLogin}
+						<Avatar
+							src="https://images.unsplash.com/photo-1527980965255-d3b416303d12?q=80&w=3023&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+							initials="OG"
+							width="w-8"
+						/>
+					{/if}
 					<LightSwitch />
 				</svelte:fragment>
 			</AppBar>
