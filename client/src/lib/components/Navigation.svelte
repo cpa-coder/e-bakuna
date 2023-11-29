@@ -4,19 +4,23 @@
 
 	const drawer = getDrawerStore();
 
-	$: classesActive = (href: string) => (href === $page.url.pathname ? '!bg-primary-500' : '');
+	$: activeClass = (href: string) => ($page.url.pathname === href ? 'bg-primary-500' : '');
 </script>
 
 <nav class="list-nav p-4">
 	<ul>
-		<li on:keypress on:click={drawer.close}>
-			<a href="/" class={classesActive('/')}>Notes</a>
+		<li>
+			<a on:keypress on:click={drawer.close} href="/" class={activeClass('/')}> Home </a>
 		</li>
-		<li on:keypress on:click={drawer.close}>
-			<a href="/?test=1" class={classesActive('/?test=1')}>Notes</a>
+		<li>
+			<a on:keypress on:click={drawer.close} href="/company" class={activeClass('/company')}>
+				Company
+			</a>
 		</li>
-		<li on:keypress on:click={drawer.close}>
-			<a href="/?test=2" class={classesActive('/?test=2')}>Notes</a>
+		<li>
+			<a on:keypress on:click={drawer.close} href="/account" class={activeClass('/account')}>
+				Account
+			</a>
 		</li>
 	</ul>
 </nav>
