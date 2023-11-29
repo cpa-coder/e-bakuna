@@ -22,5 +22,15 @@
 				Account
 			</a>
 		</li>
+		<li>
+			<a
+				on:keypress
+				on:click={drawer.close}
+				href="/account/add"
+				class={activeClass('/account/add')}
+			>
+				Add Account
+			</a>
+		</li>
 	</ul>
 </nav>
